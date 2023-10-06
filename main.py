@@ -29,15 +29,20 @@ while line:
 fileopen.close()
 
 ip_list.sort()
-content_group = []
 for item in ip_list:
     data = json.loads(get_geolocation_info(item))
-    ip = data['ip_address']
-    city = data['city']
-    content_group.append(ip + ' : ' + city)
+    try:
+        ip = data['ip_address']
+        city = data['city']
+        content_group.append(ip + ' : ' + city)
+    except KeyError:
+        content_group.append(item+" : No data")
 for item in content_group:
     outfile = open("out.txt", "w")
     print(item)
     outfile.write(item)
     outfile.close()
-print("Your ip has been successfully converted to GeoIpLocation into out.txt")
+if len(content_group)!=0:
+    print("Your ip has been successfully converted to GeoIpLocation into out.txt")
+else:
+    print("No ip found in log file!")
