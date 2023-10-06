@@ -16,7 +16,7 @@ def get_geolocation_info(validated_ip_address):
         raise SystemExit(api_error)
 
 
-fileopen = open("nohup.out")
+fileopen = open("naive.log")
 line = fileopen.readline()
 while line:
     flag = line.find("remote_ip")
