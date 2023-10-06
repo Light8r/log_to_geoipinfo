@@ -33,7 +33,7 @@ while line:
         isp_name = connection['isp_name']
         connection_type = connection['connection_type']
         host_analysis = {host: 1}
-        ipinfo = {'time': time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp + datetime.timedelta(hours=8)))),
+        ipinfo = {'time': time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp))),
                   'host_analysis': host_analysis,
                   'city': city,
                   'country': country,
@@ -43,7 +43,7 @@ while line:
         connection_analysis[remote_ip] = ipinfo
     else:
         ipinfo = connection_analysis[remote_ip]
-        ipinfo['time'] = time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp + datetime.timedelta(hours=8))))
+        ipinfo['time'] = time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp)))
         host_analysis = ipinfo['host_analysis']
         if host not in host_analysis:
             host_analysis.setdefault(host, 1)
@@ -67,6 +67,6 @@ fileout = open("out.json", "w", encoding="utf-8")
 fileout.write(Output)
 fileout.close()
 if len(connection_analysis)!=0:
-    print("Your ip has been successfully converted to GeoIpLocation into out.json")
+    print("Your ip has been successfully converted to GeoIpLocation into out.txt")
 else:
     print("No ip found in log file!")
