@@ -1,4 +1,4 @@
-import re, requests, json, sys
+import re, requests, json, sys，time
 
 api_url = "https://ipgeolocation.abstractapi.com/v1/"
 api_key = sys.argv[1]
@@ -31,7 +31,7 @@ fileopen.close()
 ip_list.sort()
 for item in ip_list:
     data = json.loads(get_geolocation_info(item))
-    sleep(1)
+    time.sleep(1)
     try:
         ip = data['ip_address']
         city = data['city']
