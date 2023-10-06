@@ -31,6 +31,7 @@ fileopen.close()
 ip_list.sort()
 for item in ip_list:
     data = json.loads(get_geolocation_info(item))
+    sleep(1)
     try:
         ip = data['ip_address']
         city = data['city']
