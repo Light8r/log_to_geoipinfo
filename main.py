@@ -22,7 +22,7 @@ while line:
     flag = line.find("remote_ip")
     if flag != -1:
         ipfounded = re.search(
-            r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b", line)
+            r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b", line[flag:-1])
         if ipfounded.group() not in ip_list:
             ip_list.append(ipfounded.group())
     line = fileopen.readline()
@@ -32,11 +32,12 @@ ip_list.sort()
 content_group = []
 for item in ip_list:
     data = json.loads(get_geolocation_info(item))
-    ip = data["ip_address"]
-    city = data["city"]
+    ip = data['ip_address']
+    city = data['city']
     content_group.append(ip + ' : ' + city)
 for item in content_group:
     outfile = open("out.txt", "w")
+    print(item)
     outfile.write(item)
     outfile.close()
 print("Your ip has been successfully converted to GeoIpLocation into out.txt")
