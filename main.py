@@ -1,4 +1,4 @@
-import requests, json, time, datetime, sys
+import requests, json, time, datetime, sys,os
 
 api_url = "https://ipgeolocation.abstractapi.com/v1/"
 api_key = sys.argv[1]
@@ -66,7 +66,8 @@ Output = json.dumps(connection_analysis, sort_keys=True, indent=4, separators=('
 fileout = open("out.json", "w", encoding="utf-8")
 fileout.write(Output)
 fileout.close()
+os.rename("out.json", time.strftime("%Y_%m_%d_%H_%M_%Sipanalysis.json"))
 if len(connection_analysis)!=0:
-    print("Your ip has been successfully converted to GeoIpLocation into out.txt")
+    print("Your ip has been successfully converted to GeoIpLocation into Dateipanalysis.json")
 else:
     print("No ip found in log file!")
