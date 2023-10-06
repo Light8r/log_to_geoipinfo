@@ -67,6 +67,6 @@ fileout = open("out.json", "w", encoding="utf-8")
 fileout.write(Output)
 fileout.close()
 if len(connection_analysis)!=0:
-    print("Your ip has been successfully converted to GeoIpLocation into out.txt")
+    print("Your ip has been successfully converted to GeoIpLocation into out.json")
 else:
     print("No ip found in log file!")
