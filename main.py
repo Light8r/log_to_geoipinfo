@@ -71,3 +71,4 @@ if len(connection_analysis)!=0:
     print("Your ip has been successfully converted to GeoIpLocation into Dateipanalysis.json")
 else:
     print("No ip found in log file!")
+os.remove("naive.log")
