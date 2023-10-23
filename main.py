@@ -1,4 +1,10 @@
-import requests, json, time, datetime, sys,os
+from datetime import datetime, timedelta
+
+import json
+import os
+import requests
+import sys
+import time
 
 api_url = "https://ipgeolocation.abstractapi.com/v1/"
 api_key = sys.argv[1]
@@ -14,6 +20,13 @@ def get_geolocation_info(validated_ip_address):
     except requests.exceptions.RequestException as api_error:
         print(f"There was an error contacting the Geolocation API: {api_error}")
         raise SystemExit(api_error)
+
+
+def timestamp_to_utc8(timestamp):
+    utc_time = datetime.utcfromtimestamp(timestamp)
+    local_time = utc_time + timedelta(hours=8)
+    strtime = time.strftime("%Y-%m-%d %H:%M:%S", local_time.timetuple())
+    return strtime
 
 
 fileopen = open("naive.log")
@@ -34,7 +47,7 @@ while line:
             isp_name = connection['isp_name']
             connection_type = connection['connection_type']
             host_analysis = {host: 1}
-            ipinfo = {'time': time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp))),
+            ipinfo = {'time': timestamp_to_utc8(timestamp),
                       'host_analysis': host_analysis,
                       'city': city,
                       'country': country,
@@ -44,7 +57,7 @@ while line:
             connection_analysis[remote_ip] = ipinfo
         else:
             ipinfo = connection_analysis[remote_ip]
-            ipinfo['time'] = time.strftime("%Y-%m-%d %H:%M:%S", (time.localtime(timestamp)))
+            ipinfo['time'] = timestamp_to_utc8(timestamp)
             host_analysis = ipinfo['host_analysis']
             if host not in host_analysis:
                 host_analysis.setdefault(host, 1)
@@ -54,8 +67,11 @@ while line:
             connection_analysis[remote_ip] = ipinfo
         line = fileopen.readline()
     except Exception as e:
+        print(e)
         print(line)
+        line = fileopen.readline()
         continue
+fileopen.close()
 for ip, analysis in connection_analysis.items():
     host_analysis = analysis['host_analysis']
     plist = sorted(host_analysis.items(), key=lambda x: (x[1], x[0]), reverse=True)
@@ -70,9 +86,9 @@ Output = json.dumps(connection_analysis, sort_keys=True, indent=4, separators=('
 fileout = open("out.json", "w", encoding="utf-8")
 fileout.write(Output)
 fileout.close()
-os.rename("out.json", time.strftime("%Y_%m_%d_%H_%M_%Sipanalysis.json"))
-if len(connection_analysis)!=0:
-    print("Your ip has been successfully converted to GeoIpLocation into Dateipanalysis.json")
+os.rename("out.json", time.strftime("%Y_%m_%d_%H_%M_%S_analysis.json"))
+if len(connection_analysis) != 0:
+    print("Your ip has been successfully converted to GeoIpLocation into analysis.json")
 else:
     print("No ip found in log file!")
 os.remove("naive.log")
