@@ -54,6 +54,7 @@ while line:
             connection_analysis[remote_ip] = ipinfo
         line = fileopen.readline()
     except Exception as e:
+        print(line)
         continue
 for ip, analysis in connection_analysis.items():
     host_analysis = analysis['host_analysis']
