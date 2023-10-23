@@ -22,11 +22,11 @@ def get_geolocation_info(validated_ip_address):
         raise SystemExit(api_error)
 
 
-def timestamp_to_utc8(timestamp):
-    utc_time = datetime.utcfromtimestamp(timestamp)
+def timestamp_to_utc8(timestamps):
+    utc_time = datetime.utcfromtimestamp(timestamps)
     local_time = utc_time + timedelta(hours=8)
-    strtime = time.strftime("%Y-%m-%d %H:%M:%S", local_time.timetuple())
-    return strtime
+    stringtime = time.strftime("%Y-%m-%d %H:%M:%S", local_time.timetuple())
+    return stringtime
 
 
 fileopen = open("naive.log")
@@ -83,12 +83,12 @@ for ip, analysis in connection_analysis.items():
     analysis['host_analysis'] = host_analysis
     connection_analysis[ip] = analysis
 Output = json.dumps(connection_analysis, sort_keys=True, indent=4, separators=(',', ':'))
-fileout = open("out.json", "w", encoding="utf-8")
-fileout.write(Output)
-fileout.close()
-os.rename("out.json", time.strftime("%Y_%m_%d_%H_%M_%S_analysis.json"))
-if len(connection_analysis) != 0:
-    print("Your ip has been successfully converted to GeoIpLocation into analysis.json")
-else:
-    print("No ip found in log file!")
+filename = time.strftime("%Y_%m_%d_%H_%M_%S_analysis.json")
+try:
+    fileout = open(filename, "w", encoding="utf-8")
+    fileout.write(Output)
+    fileout.close()
+    print("Your analysis is in %s" % filename)
+except Exception as e:
+    print("Error when writing to the file", e)
 os.remove("naive.log")
